@@ -14,20 +14,27 @@ class CodeGenerator{
 	public function __construct($pattern,$quantity){
 		$this->_quantity = $quantity;
 		$this->_pattern = $pattern;
+		$this->_codes = array();
 	}
 
-	public function generateCodes(){
-		$this->_codes = array();
+	public function generateCodes($quantity=null){
+		if(is_null($quantity))
+			$quantity = $this->_quantity;
 
-		for($n = 1; $n<=$this->_quantity;$n++){
+		for($n = 1; $n<=($quantity);$n++){
 			$code = $this->_generateCode();
 
 			//if code already used keep generating codes until new unique code generated
-			while(array_search($code,$this->_codes) != false){
-				$code = $this->_generateCode();
-			}
+			//while(in_array($code,$this->_codes)){
+				//$code = $this->_generateCode();
+			//}
 			$this->_codes[] = $code;
 		}
+
+		$this->_codes = array_unique($this->_codes);
+		if(count($this->_codes)<$this->_quantity)
+			$this->generateCodes($this->_quantity-count($this->_codes));
+
 	}
 
 	public function outputCodes($format){
